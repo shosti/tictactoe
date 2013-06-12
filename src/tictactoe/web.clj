@@ -9,7 +9,13 @@
             [ring.adapter.jetty :as jetty]
             [environ.core :refer [env]]))
 
+(defn move [board]
+  (println board)
+  board)
+
 (defroutes app
+  (GET "/move" [board]
+       (move board))
   (route/resources "/")
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
