@@ -14,10 +14,8 @@
             :let [player (get-in board pos)]
             :when player
             direction directions
-            :let [next-pos (map + pos direction)]
-            :when (= player
-                     (get-in board next-pos)
-                     (get-in board (map + next-pos direction)))]
+            :when (every? #(= (get-in board %) player)
+                          (take 3 (iterate #(map + % direction) pos)))]
         player))
      (when (not-any? #(some nil? %) board)
        :draw))))
