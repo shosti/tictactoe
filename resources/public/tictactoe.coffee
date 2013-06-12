@@ -18,16 +18,29 @@ class Game
       @board[row][col] = @player
       @isHumanTurn = false
       @drawBoard()
+      @requestComputerMove()
 
-      $.ajax
-        url: 'move'
-        data: {board: JSON.stringify(@board)}
-        success: (data) =>
-          @board = JSON.parse(data)
-          @isHumanTurn = true
-          @drawBoard()
-        error: (xhr, status, error) ->
-          $('#status').text("Error: #{error}")
+  requestComputerMove: ->
+    $.ajax
+      url: 'move'
+      data: {board: JSON.stringify(@board)}
+      success: @handleComputerMove
+      error: (xhr, status, error) ->
+        $('#status').text("Error: #{error}")
+
+  handleComputerMove: (dataStr) =>
+    data = JSON.parse(dataStr)
+    if data.winner
+      @drawBoard()
+      statusText =
+        if data.winner == 'draw'
+        then "It's a draw!"
+        else "#{data.winner} wins!"
+      $('#status').text(statusText)
+    else
+      @board = data.board
+      @isHumanTurn = true
+      @drawBoard()
 
   drawBoard: ->
     for row in [0..2]
@@ -35,4 +48,5 @@ class Game
         id = "##{row}#{col}"
         $(id).text(@board[row][col] || '')
 
-    $('#status').text(if @isHumanTurn then 'Your turn' else "Computer's turn")
+    statusText = if @isHumanTurn then 'Your turn' else "Computer's turn"
+    $('#status').text(statusText)

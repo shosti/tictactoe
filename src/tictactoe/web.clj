@@ -7,15 +7,18 @@
             [ring.middleware.session :as session]
             [ring.middleware.session.cookie :as cookie]
             [ring.adapter.jetty :as jetty]
-            [environ.core :refer [env]]))
+            [environ.core :refer [env]]
+            [cheshire.core :as JSON]
+            [tictactoe.core :refer [move]]))
 
-(defn move [board]
-  (println board)
-  board)
+(defn handle-move [board-str]
+  (let [board (JSON/parse-string board-str)
+        [new-play winner] (move board)]
+    (JSON/generate-string {:board new-play :winner winner})))
 
 (defroutes app
   (GET "/move" [board]
-       (move board))
+       (handle-move board))
   (route/resources "/")
   (ANY "*" []
        (route/not-found (slurp (io/resource "404.html")))))
@@ -32,10 +35,10 @@
   (let [port (Integer. (or port (env :port) 5000))
         store (cookie/cookie-store {:key (env :session-secret)})]
     (jetty/run-jetty (-> #'app
-                         ((if (env :production)
-                            wrap-error-page
-                            trace/wrap-stacktrace))
-                         (site {:session {:store store}}))
+                        ((if (env :production)
+                           wrap-error-page
+                           trace/wrap-stacktrace))
+                        (site {:session {:store store}}))
                      {:port port :join? false})))
 
 ;; For interactive development:
