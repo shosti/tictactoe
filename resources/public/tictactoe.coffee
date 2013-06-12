@@ -30,6 +30,7 @@ class Game
 
   handleComputerMove: (dataStr) =>
     data = JSON.parse(dataStr)
+    @board = data.board
     if data.winner
       @drawBoard()
       statusText =
@@ -38,7 +39,6 @@ class Game
         else "#{data.winner} wins!"
       $('#status').text(statusText)
     else
-      @board = data.board
       @isHumanTurn = true
       @drawBoard()
 

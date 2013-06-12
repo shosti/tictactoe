@@ -51,12 +51,12 @@
     Game.prototype.handleComputerMove = function(dataStr) {
       var data, statusText;
       data = JSON.parse(dataStr);
+      this.board = data.board;
       if (data.winner) {
         this.drawBoard();
         statusText = data.winner === 'draw' ? "It's a draw!" : "" + data.winner + " wins!";
         return $('#status').text(statusText);
       } else {
-        this.board = data.board;
         this.isHumanTurn = true;
         return this.drawBoard();
       }
