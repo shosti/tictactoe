@@ -12,7 +12,8 @@
             [tictactoe.core :refer [move]]))
 
 (defn handle-move [board-str]
-  (let [board (JSON/parse-string board-str)
+  (let [board (vec (map #(vec (map keyword %))
+                        (JSON/parse-string board-str)))
         [new-play winner] (move board)]
     (JSON/generate-string {:board new-play :winner winner})))
 
