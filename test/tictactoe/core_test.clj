@@ -35,7 +35,7 @@
            :X)))
 
   (testing "O wins horizontally"
-    (is (= (winner y-wins-board)
+    (is (= (winner o-wins-board)
            :O)))
 
   (testing "O wins diagonally"
@@ -62,16 +62,6 @@
   (testing "Draw"
     (is (= (winner draw-board)
            :draw))))
-
-(deftest test-utility
-  (testing "O wins"
-    (is (= (utility :O) 1)))
-
-  (testing "X wins"
-    (is (= (utility :X) -1)))
-
-  (testing "Draw"
-    (is (= (utility :draw) 0))))
 
 (deftest test-move
   (testing "X wins"
