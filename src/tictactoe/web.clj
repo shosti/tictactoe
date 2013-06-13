@@ -21,8 +21,8 @@
   (GET "/move" [board]
        (handle-move board))
   (route/resources "/")
-  (ANY "*" []
-       (route/not-found (slurp (io/resource "404.html")))))
+  (GET "*" []
+       (io/resource "public/tictactoe.html")))
 
 (defn wrap-error-page [handler]
   (fn [req]
